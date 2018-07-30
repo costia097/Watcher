@@ -44,10 +44,11 @@ jobs:
         - ~/.gradle
         key: v1-dependencies-{{ checksum "build.gradle" }}
 
-    - run:
+    jobs:
+     - run:
       name: chmod permissions
       command: chmod +x ./gradlew
-      - checkout
+
 
     # run tests!
     - run: ./gradlew test --stacktrace
