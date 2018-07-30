@@ -31,6 +31,7 @@ public class DbConfig {
         LocalSessionFactoryBuilder sessionBuilder = new LocalSessionFactoryBuilder(dataSource);
         sessionBuilder.scanPackages("net.watcher.domain.entities");
         sessionBuilder.setProperty("hibernate.show_sql", "true");
+        sessionBuilder.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
         return sessionBuilder.buildSessionFactory();
     }
     @Bean(name = "transactionManager")
