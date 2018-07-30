@@ -28,6 +28,7 @@ jobs:
 
     steps:
     - checkout
+    chmod +x ./gradlew
 
 
     # Download and cache dependencies
@@ -46,7 +47,4 @@ jobs:
 
 
     # run tests!
-
-    -steps:
-    - run:  chmod +x ./gradlew
     - run: ./gradlew test --stacktrace
