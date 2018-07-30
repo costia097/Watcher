@@ -13,6 +13,7 @@ jobs:
       environment:
         MYSQL_ROOT_PASSWORD: empty
         MYSQL_ROOT_HOST: "%"
+        MYSQL_DB: "watcher"
     # Specify service dependencies here if necessary
     # CircleCI maintains a library of pre-built images
     # documented at https://circleci.com/docs/2.0/circleci-images/
