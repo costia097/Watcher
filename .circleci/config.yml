@@ -45,7 +45,7 @@ jobs:
         key: v1-dependencies-{{ checksum "build.gradle" }}
 
     jobs:
-     - run:
+      run:
       name: chmod permissions
       command: chmod +x ./gradlew
 
