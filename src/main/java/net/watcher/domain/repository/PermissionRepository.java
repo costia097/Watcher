@@ -15,6 +15,7 @@ public class PermissionRepository {
     private SessionFactory sessionFactory;
 
     @Transactional
+    @SuppressWarnings("unchecked")
     public List<Permission> getAllPermissions() {
         Session currentSession = sessionFactory.getCurrentSession();
         List<Permission> from_permission = currentSession.createQuery("from Permission").list();
