@@ -28,7 +28,7 @@ jobs:
 
     steps:
     - checkout
-    chmod +x ./gradlew
+    - chmod +x ./gradlew
 
 
     # Download and cache dependencies
