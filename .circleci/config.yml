@@ -46,6 +46,7 @@ jobs:
 
 
     # run tests!
-    - run:
-      command: chmod +x ./gradlew
+
+    -steps:
+    - run:  chmod +x ./gradlew
     - run: ./gradlew test --stacktrace
