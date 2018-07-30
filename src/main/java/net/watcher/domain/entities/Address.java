@@ -6,6 +6,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+/**
+ * Address entity presentation
+ *
+ * @author Kostia
+ *
+ */
 @Entity
 public class Address {
     @Id

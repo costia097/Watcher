@@ -2,18 +2,22 @@ package net.watcher.domain.entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
 import java.util.Set;
 
+/**
+ * User entity presentation one of the main entity
+ *
+ * @author Kostia
+ *
+ */
 @Entity
 public class User {
     @Id
@@ -35,7 +39,7 @@ public class User {
     @ManyToMany
     @JoinTable(name = "permission_user_mapping", joinColumns = {@JoinColumn(name = "user_id")},inverseJoinColumns = {@JoinColumn(name = "permission_id")})
     private Set<Permission> permissions;
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id")
     private Address address;
 

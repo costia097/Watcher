@@ -11,6 +11,12 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
+/**
+ * DbConfig config functionality try to connect to database
+ *
+ * @author Kostia
+ *
+ */
 @Configuration
 @EnableTransactionManagement
 public class DbConfig {

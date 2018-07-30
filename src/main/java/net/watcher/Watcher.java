@@ -5,8 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 
 @SpringBootApplication(exclude=HibernateJpaAutoConfiguration.class)
-public class HiberApplication {
+public class Watcher {
     public static void main(String[] args) {
-        SpringApplication.run(HiberApplication.class, args);
+        SpringApplication.run(Watcher.class, args);
     }
 }

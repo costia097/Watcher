@@ -8,6 +8,12 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import java.util.Set;
 
+/**
+ * Permission entity presentation
+ *
+ * @author Kostia
+ *
+ */
 @Entity
 public class Permission {
     @Id
