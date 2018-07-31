@@ -4,6 +4,7 @@ import net.watcher.domain.entities.User;
 import net.watcher.domain.services.core.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -30,8 +31,12 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String login =(String) authentication.getPrincipal();
         String password =  (String)authentication.getCredentials();
-        User targetUser = userService.findByLoginAndPassword(login, password, true);
-        return new UsernamePasswordAuthenticationToken(login, password, targetUser.getRoles());
+        User targetUser = userService.findByLogin(login, true,false);
+        if (targetUser.getPassword().equals(password)) {
+            return new UsernamePasswordAuthenticationToken(login, password, targetUser.getRoles());
+        } else {
+            throw new BadCredentialsException("Wrong password");
+        }
     }
 
     @Override

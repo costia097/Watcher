@@ -1,8 +1,8 @@
-package net.watcher.domain.dtos;
+package net.watcher.domain.responses;
 
 import java.util.List;
 
-public class UserLoginDto {
+public class UserLoginResponseModel {
     private String userName;
     private List<String> roles;
     private List<String> permissions;

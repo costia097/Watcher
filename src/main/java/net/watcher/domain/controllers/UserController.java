@@ -1,17 +1,18 @@
 package net.watcher.domain.controllers;
 
-import net.watcher.domain.dtos.UserLoginDto;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
+import net.watcher.domain.responses.UserLoginResponseModel;
+import net.watcher.domain.requests.SignUpRequestModel;
+import net.watcher.domain.services.core.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.security.PermitAll;
-import java.util.stream.Collectors;
+import javax.validation.Valid;
 
 /**
  * UserController controller functionality
@@ -22,25 +23,30 @@ import java.util.stream.Collectors;
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RestController
 public class UserController {
+    @Autowired
+    private UserService userService;
 
     /**
      * Try to login user
      *
-     * @return  UserLoginDto user auth information
+     * @return  UserLoginResponseModel user auth information
      */
     @PostMapping("/login")
     @PermitAll
-    public UserLoginDto login() {
+    public UserLoginResponseModel login() {
         SecurityContext context = SecurityContextHolder.getContext();
-        UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) context.getAuthentication();
-        UserLoginDto userLoginDto = new UserLoginDto();
-        userLoginDto.setUserName((String) authentication.getPrincipal());
-        userLoginDto.setRoles(authentication.getAuthorities()
-                .stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList()));
-        userLoginDto.setPermissions(null);
+        return userService.loginUser(context.getAuthentication());
+    }
 
-        return userLoginDto;
+    /**
+     * Try to signUp user
+     *
+     * @param  model user auth information
+     * @return id of user
+     */
+    @PostMapping("/signUp")
+    @PermitAll
+    public Long signUp(@RequestBody @Valid SignUpRequestModel model) {
+        return userService.signUpUser(model);
     }
 }

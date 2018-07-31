@@ -1,0 +1,12 @@
+{
+  "userName": "login",
+  "roles": [
+    "ROLE_USER",
+    "ROLE_ADMIN"
+  ],
+  "permissions": [
+    "write",
+    "watch",
+    "read"
+  ]
+}

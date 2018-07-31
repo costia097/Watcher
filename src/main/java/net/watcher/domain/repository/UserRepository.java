@@ -40,22 +40,23 @@ public class UserRepository {
     /**
      * Return user found by given params
      *
-     * @param login    login of user
-     * @param password password of user
+     * @param login     login of user
      * @param loadRoles or load roles
+     * @param loadPermissions or load permissions
      * @return user value of user or null if not found
      */
-    public Optional<User> getUserByLoginAndPassword(String login, String password, boolean loadRoles) {
+    public Optional<User> getUserByLogin(String login, boolean loadRoles, boolean loadPermissions) {
         Session currentSession = sessionFactory.getCurrentSession();
         StringBuilder stringQuery = new StringBuilder().append("   from User u ");
         if (loadRoles) {
             stringQuery.append("  join fetch u.roles");
         }
-        stringQuery.append("          where u.login =:login " +
-                "                         and u.password=:password");
+        if (loadPermissions) {
+            stringQuery.append(" join fetch u.permissions");
+        }
+        stringQuery.append("     where u.login =:login ");
         Query query = currentSession.createQuery(stringQuery.toString());
         query.setParameter("login", login);
-        query.setParameter("password", password);
         return query.uniqueResultOptional();
     }
 }
