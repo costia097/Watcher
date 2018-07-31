@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.security.PermitAll;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 /**
@@ -30,6 +31,8 @@ public class UserController {
      * Try to login user
      *
      * @return  UserLoginResponseModel user auth information
+     *
+     * need fix user login with incorrect credentials
      */
     @PostMapping("/login")
     @PermitAll
@@ -48,5 +51,14 @@ public class UserController {
     @PermitAll
     public Long signUp(@RequestBody @Valid SignUpRequestModel model) {
         return userService.signUpUser(model);
+    }
+
+    /**
+     * Try to logUt user
+     */
+    @PostMapping("/logOut")
+    @PermitAll
+    public void logOut(HttpServletRequest request) {
+        request.getSession().invalidate();
     }
 }
