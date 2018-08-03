@@ -1,29 +1,43 @@
 package net.watcher.domain.requests;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class SignUpRequestModel {
     @NotNull
+    @JsonProperty(value = "_firstName")
     private String firstName;
     @NotNull
     @Size(min = 3)
+    @JsonProperty(value = "_lastName")
     private String lastName;
     @NotNull
     @Size(min = 3)
     @Size(max = 15)
+    @JsonProperty(value = "_login")
     private String login;
     @NotNull
     @Size(min = 3)
     @Size(max = 25)
+    @JsonProperty(value = "_password")
     private String password;
     @NotNull
     @Email
+    @JsonProperty(value = "_email")
     private String email;
     @NotNull
+    @JsonProperty(value = "_gender")
+    private String gender;
+    @NotNull
+    @JsonProperty(value = "_dateOfBirth")
+    private String dateOfBirth;
+    @NotNull
+    @JsonProperty(value = "_country")
     private String country;
-    private String addressLine;
+    private String address;
 
     public String getFirstName() {
         return firstName;
@@ -65,6 +79,22 @@ public class SignUpRequestModel {
         this.email = email;
     }
 
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
     public String getCountry() {
         return country;
     }
@@ -73,11 +103,11 @@ public class SignUpRequestModel {
         this.country = country;
     }
 
-    public String getAddressLine() {
-        return addressLine;
+    public String getAddress() {
+        return address;
     }
 
-    public void setAddressLine(String addressLine) {
-        this.addressLine = addressLine;
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

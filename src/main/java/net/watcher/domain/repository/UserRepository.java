@@ -59,4 +59,13 @@ public class UserRepository {
         query.setParameter("login", login);
         return query.uniqueResultOptional();
     }
+
+    /**
+     * Return user found by given params
+     *
+     * @param user     user to save
+     */
+    public void saveUser(User user) {
+        sessionFactory.getCurrentSession().save(user);
+    }
 }

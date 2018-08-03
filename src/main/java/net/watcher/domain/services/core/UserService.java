@@ -1,5 +1,6 @@
 package net.watcher.domain.services.core;
 
+import net.watcher.domain.convertors.UserConverter;
 import net.watcher.domain.entities.Permission;
 import net.watcher.domain.entities.User;
 import net.watcher.domain.repository.UserRepository;
@@ -24,6 +25,8 @@ import java.util.stream.Collectors;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserConverter userConverter;
 
     /**
      * Return user found by given id
@@ -78,11 +81,11 @@ public class UserService {
      * Return user found by given params
      *
      * @param model signUp model of user
-     * @return id of created user
      */
     @Transactional
-    public Long signUpUser(SignUpRequestModel model) {
-        return null;
+    public void signUpUser(SignUpRequestModel model) {
+        User user = userConverter.convertFromSignUpUserModel(model);
+        userRepository.saveUser(user);
     }
 
 }

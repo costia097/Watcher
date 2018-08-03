@@ -4,11 +4,14 @@ import net.watcher.domain.responses.UserLoginResponseModel;
 import net.watcher.domain.requests.SignUpRequestModel;
 import net.watcher.domain.services.core.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.bind.BindResult;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.security.PermitAll;
@@ -44,13 +47,13 @@ public class UserController {
     /**
      * Try to signUp user
      *
-     * @param  model user auth information
-     * @return id of user
+     * @param model user auth information
      */
     @PostMapping("/signUp")
+    @ResponseStatus(HttpStatus.OK)
     @PermitAll
-    public Long signUp(@RequestBody @Valid SignUpRequestModel model) {
-        return userService.signUpUser(model);
+    public void signUp(@RequestBody  SignUpRequestModel model) {
+        userService.signUpUser(model);
     }
 
     /**

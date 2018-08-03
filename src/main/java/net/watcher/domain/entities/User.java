@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
+import java.time.LocalDate;
 import java.util.Set;
 
 /**
@@ -48,6 +49,12 @@ public class User {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id")
     private Address address;
+    @Column
+    private Boolean active;
+    @Column
+    private String gender;
+    @Column(name = "date_of_birthday")
+    private LocalDate dateOfBirthday;
 
     public Long getId() {
         return id;
@@ -119,5 +126,29 @@ public class User {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public LocalDate getDateOfBirthday() {
+        return dateOfBirthday;
+    }
+
+    public void setDateOfBirthday(LocalDate dateOfBirthday) {
+        this.dateOfBirthday = dateOfBirthday;
     }
 }
