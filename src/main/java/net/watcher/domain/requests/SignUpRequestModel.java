@@ -37,6 +37,7 @@ public class SignUpRequestModel {
     @NotNull
     @JsonProperty(value = "_country")
     private String country;
+    @JsonProperty(value = "_address")
     private String address;
 
     public String getFirstName() {

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * UserRepository repository functionality
@@ -67,5 +68,29 @@ public class UserRepository {
      */
     public void saveUser(User user) {
         sessionFactory.getCurrentSession().save(user);
+    }
+
+    /**
+     * Return user found by given params
+     *
+     * @param uuid param
+     */
+    public User findByUuid(UUID uuid) {
+        Session currentSession = sessionFactory.getCurrentSession();
+        StringBuilder stringQuery = new StringBuilder();
+        stringQuery.append("   from User where uuid=:uuid");
+        Query query = currentSession.createQuery(stringQuery.toString());
+        query.setParameter("uuid", uuid);
+        return (User) query.uniqueResult();
+    }
+
+    /**
+     * Return user found by given params
+     *
+     * @param user param
+     */
+    public void updateUser(User user) {
+        Session currentSession = sessionFactory.getCurrentSession();
+        currentSession.saveOrUpdate(user);
     }
 }

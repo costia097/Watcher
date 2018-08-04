@@ -4,11 +4,11 @@ import net.watcher.domain.responses.UserLoginResponseModel;
 import net.watcher.domain.requests.SignUpRequestModel;
 import net.watcher.domain.services.core.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.security.PermitAll;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
+import java.util.UUID;
 
 /**
  * UserController controller functionality
@@ -63,5 +63,14 @@ public class UserController {
     @PermitAll
     public void logOut(HttpServletRequest request) {
         request.getSession().invalidate();
+    }
+
+    /**
+     * Try to logUt user
+     */
+    @PostMapping("/confirm/{uuid}")
+    @PermitAll
+    public void activateUser(@PathVariable UUID uuid) {
+        userService.activateUser(uuid);
     }
 }

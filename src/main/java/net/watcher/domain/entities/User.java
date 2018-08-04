@@ -2,8 +2,10 @@ package net.watcher.domain.entities;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.Cacheable;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,7 +17,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * User entity presentation one of the main entity
@@ -33,6 +37,9 @@ public class User {
     @Column
     private String login;
     @Column
+    @Type(type = "uuid-char")
+    private UUID uuid;
+    @Column
     private String password;
     @Column
     private String email;
@@ -42,12 +49,12 @@ public class User {
     private String lastName;
     @ManyToMany
     @JoinTable(name = "role_user_mapping", joinColumns = { @JoinColumn(name = "user_id")}, inverseJoinColumns = {@JoinColumn(name = "role_id")})
-    private Set<Role> roles;
+    private List<Role> roles;
     @ManyToMany
     @JoinTable(name = "permission_user_mapping", joinColumns = {@JoinColumn(name = "user_id")},inverseJoinColumns = {@JoinColumn(name = "permission_id")})
-    private Set<Permission> permissions;
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "address_id")
+    private List<Permission> permissions;
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @JoinColumn(name = "address_id", unique = true)
     private Address address;
     @Column
     private Boolean active;
@@ -104,19 +111,19 @@ public class User {
         this.lastName = lastName;
     }
 
-    public Set<Role> getRoles() {
+    public List<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(Set<Role> roles) {
+    public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
 
-    public Set<Permission> getPermissions() {
+    public List<Permission> getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(Set<Permission> permissions) {
+    public void setPermissions(List<Permission> permissions) {
         this.permissions = permissions;
     }
 
@@ -150,5 +157,13 @@ public class User {
 
     public void setDateOfBirthday(LocalDate dateOfBirthday) {
         this.dateOfBirthday = dateOfBirthday;
+    }
+
+    public UUID getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(UUID uuid) {
+        this.uuid = uuid;
     }
 }
