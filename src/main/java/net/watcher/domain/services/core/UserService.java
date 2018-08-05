@@ -3,9 +3,11 @@ package net.watcher.domain.services.core;
 import net.watcher.domain.convertors.UserConverter;
 import net.watcher.domain.entities.Address;
 import net.watcher.domain.entities.Permission;
+import net.watcher.domain.entities.Role;
 import net.watcher.domain.entities.User;
 import net.watcher.domain.repository.UserRepository;
 import net.watcher.domain.requests.SignUpRequestModel;
+import net.watcher.domain.responses.EmailLoginsResponse;
 import net.watcher.domain.responses.UserLoginResponseModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -13,6 +15,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -126,11 +129,29 @@ public class UserService {
      * Method
      *
      * @param uuid param
+     *
+     *  //        targetUser.setRoles(roles);
+     * //        targetUser.setPermissions(permissions);
+     *  when trying just set new collection of role and permission and update see next logs :
+     *2018-08-05 06:06:22.041  WARN 6940 --- [nio-9090-exec-4] o.h.e.loading.internal.LoadContexts      : HHH000100: Fail-safe cleanup (collections) : org.hibernate.engine.loading.internal.CollectionLoadContext@5053e657<rs=HikariProxyResultSet@180270629 wrapping com.mysql.jdbc.JDBC42ResultSet@79be96f0>
+     * 2018-08-05 06:06:22.042  WARN 6940 --- [nio-9090-exec-4] o.h.e.loading.internal.LoadContexts      : HHH000100: Fail-safe cleanup (collections) : org.hibernate.engine.loading.internal.CollectionLoadContext@72b466e7<rs=HikariProxyResultSet@189106070 wrapping com.mysql.jdbc.JDBC42ResultSet@62d990c>
+     * 2018-08-05 06:06:22.042  WARN 6940 --- [nio-9090-exec-4] o.h.e.l.internal.CollectionLoadContext   : HHH000160: On CollectionLoadContext#cleanup, localLoadingCollectionKeys contained [1] entries
+     * 2018-08-05 06:06:22.042  WARN 6940 --- [nio-9090-exec-4] o.h.e.loading.internal.LoadContexts      : HHH000100: Fail-safe cleanup (collections) : org.hibernate.engine.loading.internal.CollectionLoadContext@31dad01<rs=HikariProxyResultSet@34637018 wrapping com.mysql.jdbc.JDBC42ResultSet@10796a32>
+     * 2018-08-05 06:06:22.042  WARN 6940 --- [nio-9090-exec-4] o.h.e.loading.internal.LoadContexts      : HHH000100: Fail-safe cleanup (collections) : org.hibernate.engine.loading.internal.CollectionLoadContext@43269a5d<rs=HikariProxyResultSet@1803698986 wrapping com.mysql.jdbc.JD
      */
     @Transactional
     public void activateUser(UUID uuid) {
         User targetUser = userRepository.findByUuid(uuid);
+        if (targetUser.isActive()) {
+            return;
+        }
         targetUser.setActive(true);
+        List<Permission> permissions = permissionAndRoleService.resolvePermissionForActiveUser();
+        List<Role> roles = permissionAndRoleService.resolveRolesForActiveUser();
+        targetUser.getPermissions().clear();
+        targetUser.getRoles().clear();
+        permissions.forEach(permission -> targetUser.getPermissions().add(permission));
+        roles.forEach(role -> targetUser.getRoles().add(role));
         userRepository.updateUser(targetUser);
     }
 

@@ -7,6 +7,7 @@ import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -92,5 +93,28 @@ public class UserRepository {
     public void updateUser(User user) {
         Session currentSession = sessionFactory.getCurrentSession();
         currentSession.saveOrUpdate(user);
+    }
+
+    /**
+     * Return user found by given params
+     *
+     */
+    public List<String> findAllLogins() {
+        Session currentSession = sessionFactory.getCurrentSession();
+        StringBuilder stringQuery = new StringBuilder();
+        stringQuery.append("SELECT u.login From User u");
+        Query query = currentSession.createQuery(stringQuery.toString());
+        return query.list();
+    }
+
+    /**
+     * Return user found by given paramsl
+     */
+    public List<String> findAllEmails() {
+        Session currentSession = sessionFactory.getCurrentSession();
+        StringBuilder stringQuery = new StringBuilder();
+        stringQuery.append("SELECT u.email From User u");
+        Query query = currentSession.createQuery(stringQuery.toString());
+        return query.list();
     }
 }

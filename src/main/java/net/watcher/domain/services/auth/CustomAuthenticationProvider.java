@@ -5,6 +5,7 @@ import net.watcher.domain.services.core.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -32,10 +33,12 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         String login =(String) authentication.getPrincipal();
         String password =  (String)authentication.getCredentials();
         User targetUser = userService.findByLogin(login, true,false);
-        if (targetUser.getPassword().equals(password)) {
+        if (targetUser == null) {
+            throw new BadCredentialsException("Bad creds");
+        } else if (targetUser.getPassword().equals(password)) {
             return new UsernamePasswordAuthenticationToken(login, password, targetUser.getRoles());
         } else {
-            throw new BadCredentialsException("Wrong password");
+            throw new DisabledException("your account is not active");
         }
     }
 

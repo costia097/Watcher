@@ -48,10 +48,10 @@ public class User {
     @Column(name = "last_name")
     private String lastName;
     @ManyToMany
-    @JoinTable(name = "role_user_mapping", joinColumns = { @JoinColumn(name = "user_id")}, inverseJoinColumns = {@JoinColumn(name = "role_id")})
+    @JoinTable(name = "role_user_mapping", joinColumns = {@JoinColumn(name = "user_id")}, inverseJoinColumns = {@JoinColumn(name = "role_id")})
     private List<Role> roles;
     @ManyToMany
-    @JoinTable(name = "permission_user_mapping", joinColumns = {@JoinColumn(name = "user_id")},inverseJoinColumns = {@JoinColumn(name = "permission_id")})
+    @JoinTable(name = "permission_user_mapping", joinColumns = {@JoinColumn(name = "user_id")}, inverseJoinColumns = {@JoinColumn(name = "permission_id")})
     private List<Permission> permissions;
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @JoinColumn(name = "address_id", unique = true)
@@ -135,7 +135,7 @@ public class User {
         this.address = address;
     }
 
-    public Boolean getActive() {
+    public Boolean isActive() {
         return active;
     }
 
