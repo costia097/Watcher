@@ -19,7 +19,10 @@ public class ServerController {
     @Autowired
     public ServerService serverService;
 
-
+    /**
+     * Try to get all logins and emails
+     * smoked ✓
+     */
     @GetMapping("/allLoginsAndEmails")
     public EmailLoginsResponse getAllLoginsAndEmails() {
         return serverService.prepareAllEmailsAndLogin();

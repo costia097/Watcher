@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 public class EmailLoginsResponse {
+    public EmailLoginsResponse() {
+    }
+
     public EmailLoginsResponse(List<String> emails, List<String> logins) {
         this.emails = emails;
         this.logins = logins;

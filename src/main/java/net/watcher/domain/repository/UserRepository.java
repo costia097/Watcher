@@ -42,12 +42,13 @@ public class UserRepository {
     /**
      * Return user found by given params
      *
-     * @param login     login of user
-     * @param loadRoles or load roles
+     * @param login           login of user
+     * @param loadRoles       or load roles
      * @param loadPermissions or load permissions
+     * @param loadAddress or load address
      * @return user value of user or null if not found
      */
-    public Optional<User> getUserByLogin(String login, boolean loadRoles, boolean loadPermissions) {
+    public Optional<User> getUserByLogin(String login, boolean loadRoles, boolean loadPermissions, boolean loadAddress) {
         Session currentSession = sessionFactory.getCurrentSession();
         StringBuilder stringQuery = new StringBuilder().append("   from User u ");
         if (loadRoles) {
@@ -55,6 +56,9 @@ public class UserRepository {
         }
         if (loadPermissions) {
             stringQuery.append(" join fetch u.permissions");
+        }
+        if (loadAddress) {
+            stringQuery.append("  join fetch u.address");
         }
         stringQuery.append("     where u.login =:login ");
         Query query = currentSession.createQuery(stringQuery.toString());
@@ -116,5 +120,13 @@ public class UserRepository {
         stringQuery.append("SELECT u.email From User u");
         Query query = currentSession.createQuery(stringQuery.toString());
         return query.list();
+    }
+
+    public SessionFactory getSessionFactory() {
+        return sessionFactory;
+    }
+
+    public void setSessionFactory(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
 }

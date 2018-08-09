@@ -18,6 +18,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -49,10 +50,10 @@ public class User {
     private String lastName;
     @ManyToMany
     @JoinTable(name = "role_user_mapping", joinColumns = {@JoinColumn(name = "user_id")}, inverseJoinColumns = {@JoinColumn(name = "role_id")})
-    private List<Role> roles;
+    private Set<Role> roles;
     @ManyToMany
     @JoinTable(name = "permission_user_mapping", joinColumns = {@JoinColumn(name = "user_id")}, inverseJoinColumns = {@JoinColumn(name = "permission_id")})
-    private List<Permission> permissions;
+    private Set<Permission> permissions;
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @JoinColumn(name = "address_id", unique = true)
     private Address address;
@@ -111,19 +112,19 @@ public class User {
         this.lastName = lastName;
     }
 
-    public List<Role> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 
-    public List<Permission> getPermissions() {
+    public Set<Permission> getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(List<Permission> permissions) {
+    public void setPermissions(Set<Permission> permissions) {
         this.permissions = permissions;
     }
 
@@ -165,5 +166,31 @@ public class User {
 
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(id, user.id) &&
+                Objects.equals(login, user.login) &&
+                Objects.equals(uuid, user.uuid) &&
+                Objects.equals(password, user.password) &&
+                Objects.equals(email, user.email) &&
+                Objects.equals(firstName, user.firstName) &&
+                Objects.equals(lastName, user.lastName) &&
+                Objects.equals(roles, user.roles) &&
+                Objects.equals(permissions, user.permissions) &&
+                Objects.equals(address, user.address) &&
+                Objects.equals(active, user.active) &&
+                Objects.equals(gender, user.gender) &&
+                Objects.equals(dateOfBirthday, user.dateOfBirthday);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, login, uuid, password, email, firstName, lastName, roles, permissions, address, active, gender, dateOfBirthday);
     }
 }

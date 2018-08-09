@@ -1,7 +1,9 @@
 package net.watcher.domain.services.core;
 
+import net.watcher.domain.services.core.intefaces.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Profile;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -9,8 +11,14 @@ import org.springframework.stereotype.Service;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
+/**
+ * Email service functionality
+ *
+ * @author Kostia
+ */
+@Profile("!qa")
 @Service
-public class EmailService {
+public class EmailServiceImp implements EmailService {
     @Autowired
     @Qualifier("javaMailSenderImpl")
     private JavaMailSenderImpl javaMailSender;

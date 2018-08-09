@@ -1,4 +1,5 @@
 {
+  "_comment": "response of endpoint UserController method login",
   "userName": "login",
   "roles": [
     "ROLE_USER",

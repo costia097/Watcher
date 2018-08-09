@@ -6,6 +6,12 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.util.Properties;
 
+/**
+ * MailConfig config functionality try to connect to mails service
+ *
+ * @author Kostia
+ *
+ */
 @Configuration
 public class MailConfig {
 

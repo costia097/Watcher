@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.security.PermitAll;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.UUID;
 
 /**
@@ -36,6 +37,7 @@ public class UserController {
      * @return  UserLoginResponseModel user auth information
      *
      * need fix user login with incorrect credentials
+     * smoked ✓
      */
     @PostMapping("/login")
     @PermitAll
@@ -48,16 +50,18 @@ public class UserController {
      * Try to signUp user
      *
      * @param model user auth information
+     * smoked ✓
      */
     @PostMapping("/signUp")
     @ResponseStatus(HttpStatus.OK)
     @PermitAll
-    public void signUp(@RequestBody  SignUpRequestModel model) {
+    public void signUp(@RequestBody @Valid SignUpRequestModel model) {
         userService.signUpUser(model);
     }
 
     /**
      * Try to logUt user
+     * smoked ✓
      */
     @PostMapping("/logOut")
     @PermitAll
@@ -67,6 +71,7 @@ public class UserController {
 
     /**
      * Try to logUt user
+     * smoked ✓
      */
     @PostMapping("/confirm/{uuid}")
     @PermitAll

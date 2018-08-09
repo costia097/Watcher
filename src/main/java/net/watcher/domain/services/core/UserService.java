@@ -7,14 +7,15 @@ import net.watcher.domain.entities.Role;
 import net.watcher.domain.entities.User;
 import net.watcher.domain.repository.UserRepository;
 import net.watcher.domain.requests.SignUpRequestModel;
-import net.watcher.domain.responses.EmailLoginsResponse;
 import net.watcher.domain.responses.UserLoginResponseModel;
+import net.watcher.domain.services.core.intefaces.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -58,7 +59,7 @@ public class UserService {
      */
     @Transactional(readOnly = true)
     public User findByLogin(String login, boolean loadRoles, boolean loadPermissions) {
-        return userRepository.getUserByLogin(login, loadRoles, loadPermissions).orElse(null);
+        return userRepository.getUserByLogin(login, loadRoles, loadPermissions,false).orElse(null);
     }
 
     /**
@@ -71,6 +72,9 @@ public class UserService {
     public UserLoginResponseModel loginUser(Authentication authentication) {
         String login = (String) authentication.getPrincipal();
         User targetUser = findByLogin(login, false, true);
+        if (targetUser == null) {
+            return null;
+        }
         UserLoginResponseModel userLoginResponseModel = new UserLoginResponseModel();
 
         userLoginResponseModel.setUserName(login);
@@ -108,8 +112,8 @@ public class UserService {
      * @param user param
      */
     private void addNonActiveUserPermissionAndRole(User user) {
-        user.setPermissions(permissionAndRoleService.resolvePermissionForNonActiveUser());
-        user.setRoles(permissionAndRoleService.resolveRolesForNonActiveUser());
+        user.setPermissions(new HashSet<>(permissionAndRoleService.resolvePermissionForNonActiveUser()));
+        user.setRoles(new HashSet<>(permissionAndRoleService.resolveRolesForNonActiveUser()));
     }
 
     /**
@@ -142,7 +146,7 @@ public class UserService {
     @Transactional
     public void activateUser(UUID uuid) {
         User targetUser = userRepository.findByUuid(uuid);
-        if (targetUser.isActive()) {
+        if (targetUser == null || targetUser.isActive()) {
             return;
         }
         targetUser.setActive(true);
@@ -153,6 +157,11 @@ public class UserService {
         permissions.forEach(permission -> targetUser.getPermissions().add(permission));
         roles.forEach(role -> targetUser.getRoles().add(role));
         userRepository.updateUser(targetUser);
+    }
+
+    @Transactional
+    public void updateUser(User user) {
+        userRepository.updateUser(user);
     }
 
 }
