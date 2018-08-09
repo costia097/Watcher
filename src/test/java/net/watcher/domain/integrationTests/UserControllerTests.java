@@ -69,7 +69,7 @@ public class UserControllerTests {
         requestModel.setAddress("address");
         requestModel.setCountry("UA");
         requestModel.setDateOfBirth("2018-08-06");
-        ResponseEntity<Void> responseEntity = restTemplate.postForEntity("http://localhost:38375/signUp", requestModel, Void.class);
+        ResponseEntity<Void> responseEntity = restTemplate.postForEntity("http://localhost:9090/signUp", requestModel, Void.class);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
         User targetUser = userRepository.getUserByLogin(requestModel.getLogin(), true, true, true).orElse(null);
         assertThat(Objects.requireNonNull(targetUser).getPermissions().containsAll((permissionAndRoleService.resolvePermissionForNonActiveUser())), is(true));
@@ -92,7 +92,7 @@ public class UserControllerTests {
         requestModel.setCountry("UA");
         requestModel.setDateOfBirth("2018-08-06");
         try {
-            restTemplate.postForEntity("http://localhost:38375/signUp", requestModel, Void.class);
+            restTemplate.postForEntity("http://localhost:9090/signUp", requestModel, Void.class);
         } catch (Exception e) {
             assertThat(e.getMessage(), is(BAD_REQUEST_MESSADGE));
         }
@@ -100,7 +100,7 @@ public class UserControllerTests {
 
     @Test
     public void bb_testUserActivate_un_h_f_1() {
-        ResponseEntity<Void> responseEntity = restTemplate.postForEntity("http://localhost:38375/confirm/" + UUID.randomUUID(), null, Void.class);
+        ResponseEntity<Void> responseEntity = restTemplate.postForEntity("http://localhost:9090/confirm/" + UUID.randomUUID(), null, Void.class);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
         User targetUserAfter = userService.findByLogin("login", true, true);
         assertThat(Objects.requireNonNull(targetUserAfter).getRoles().containsAll(permissionAndRoleService.resolveRolesForNonActiveUser()), is(true));
@@ -111,7 +111,7 @@ public class UserControllerTests {
     @Test
     public void b_testUserActivate_un_h_f(){
         try {
-            restTemplate.postForEntity("http://localhost:38375/confirm/dasdsad", null, Void.class);
+            restTemplate.postForEntity("http://localhost:9090/confirm/dasdsad", null, Void.class);
         } catch (Exception e) {
             assertThat(e.getMessage(), is(BAD_REQUEST_MESSADGE));
         }
@@ -120,7 +120,7 @@ public class UserControllerTests {
     @Test
     public void bbb_testUserActivate_h_f() {
         UUID uuid = threadLocal.get();
-        ResponseEntity<Void> responseEntity = restTemplate.postForEntity("http://localhost:38375/confirm/" + uuid, null, Void.class);
+        ResponseEntity<Void> responseEntity = restTemplate.postForEntity("http://localhost:9090/confirm/" + uuid, null, Void.class);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
         User targetUserAfter = userService.findByLogin("login", true, true);
         assertThat(Objects.requireNonNull(targetUserAfter).getRoles().containsAll(permissionAndRoleService.resolveRolesForActiveUser()), is(true));
@@ -134,7 +134,7 @@ public class UserControllerTests {
         httpHeaders.add("Authorization", "Basic bG9naW46MTIzZGFzZA==");
         HttpEntity<?> requestEntity = new HttpEntity<>(null, httpHeaders);
         try {
-            restTemplate.exchange("http://localhost:38375/login", HttpMethod.POST, requestEntity, UserLoginResponseModel.class);
+            restTemplate.exchange("http://localhost:9090/login", HttpMethod.POST, requestEntity, UserLoginResponseModel.class);
         } catch (Exception e) {
             assertThat(e.getMessage(), is(UNAUTHORIZED_MESSADGE));
         }
@@ -145,7 +145,7 @@ public class UserControllerTests {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("Authorization", "Basic bG9naW46MTIz");
         HttpEntity<?> requestEntity = new HttpEntity<>(null, httpHeaders);
-        ResponseEntity<UserLoginResponseModel> exchange = restTemplate.exchange("http://localhost:38375/login", HttpMethod.POST, requestEntity, UserLoginResponseModel.class);
+        ResponseEntity<UserLoginResponseModel> exchange = restTemplate.exchange("http://localhost:9090/login", HttpMethod.POST, requestEntity, UserLoginResponseModel.class);
         assertThat(exchange.getStatusCode(), is(HttpStatus.OK));
         UserLoginResponseModel body = exchange.getBody();
         assertThat(body.getRoles().containsAll(permissionAndRoleService.resolveRolesForActiveUser()
@@ -160,7 +160,7 @@ public class UserControllerTests {
 
     @Test
     public void d_testUserLogOut_h_f() {
-        ResponseEntity<Void> responseEntity = restTemplate.postForEntity("http://localhost:38375/logOut", null, Void.class);
+        ResponseEntity<Void> responseEntity = restTemplate.postForEntity("http://localhost:9090/logOut", null, Void.class);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
     }
 }

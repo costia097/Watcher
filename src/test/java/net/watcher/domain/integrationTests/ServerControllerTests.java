@@ -34,7 +34,7 @@ public class ServerControllerTests {
 
     @Test
     public void test() {
-        ResponseEntity<EmailLoginsResponse> responseEntity = restTemplate.getForEntity("http://localhost:38375/allLoginsAndEmails", EmailLoginsResponse.class);
+        ResponseEntity<EmailLoginsResponse> responseEntity = restTemplate.getForEntity("http://localhost:9090/allLoginsAndEmails", EmailLoginsResponse.class);
         assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
         EmailLoginsResponse body = responseEntity.getBody();
         assertThat(body.getEmails().size() > 0, is(true));
