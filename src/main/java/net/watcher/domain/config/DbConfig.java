@@ -38,6 +38,7 @@ public class DbConfig {
         sessionBuilder.scanPackages("net.watcher.domain.entities");
         sessionBuilder.setProperty("hibernate.show_sql", "true");
         sessionBuilder.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
+        sessionBuilder.setProperty("hibernate.cache.provider_class", "org.hibernate.cache.EhCacheProvider");
         return sessionBuilder.buildSessionFactory();
     }
     @Bean(name = "transactionManager")

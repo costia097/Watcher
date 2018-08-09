@@ -4,10 +4,17 @@ import net.watcher.domain.entities.User;
 import net.watcher.domain.services.core.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * CustomAuthenticationProvider functionality
@@ -28,10 +35,18 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
      */
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
+        response.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
         String login =(String) authentication.getPrincipal();
         String password =  (String)authentication.getCredentials();
-        User targetUser = userService.findByLoginAndPassword(login, password, true);
-        return new UsernamePasswordAuthenticationToken(login, password, targetUser.getRoles());
+        User targetUser = userService.findByLogin(login, true,false);
+        if (targetUser == null) {
+            throw new BadCredentialsException("Bad creds");
+        } else if (targetUser.getPassword().equals(password)) {
+            return new UsernamePasswordAuthenticationToken(login, password, targetUser.getRoles());
+        } else {
+            throw new DisabledException("your account is not active");
+        }
     }
 
     @Override

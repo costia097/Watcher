@@ -1,17 +1,23 @@
 package net.watcher.domain.controllers;
 
-import net.watcher.domain.dtos.UserLoginDto;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
+import net.watcher.domain.responses.UserLoginResponseModel;
+import net.watcher.domain.requests.SignUpRequestModel;
+import net.watcher.domain.services.core.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.security.PermitAll;
-import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.util.UUID;
 
 /**
  * UserController controller functionality
@@ -22,25 +28,54 @@ import java.util.stream.Collectors;
 @CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
 @RestController
 public class UserController {
+    @Autowired
+    private UserService userService;
 
     /**
      * Try to login user
      *
-     * @return  UserLoginDto user auth information
+     * @return  UserLoginResponseModel user auth information
+     *
+     * need fix user login with incorrect credentials
+     * smoked ✓
      */
     @PostMapping("/login")
     @PermitAll
-    public UserLoginDto login() {
+    public UserLoginResponseModel login() {
         SecurityContext context = SecurityContextHolder.getContext();
-        UsernamePasswordAuthenticationToken authentication = (UsernamePasswordAuthenticationToken) context.getAuthentication();
-        UserLoginDto userLoginDto = new UserLoginDto();
-        userLoginDto.setUserName((String) authentication.getPrincipal());
-        userLoginDto.setRoles(authentication.getAuthorities()
-                .stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList()));
-        userLoginDto.setPermissions(null);
+        return userService.loginUser(context.getAuthentication());
+    }
 
-        return userLoginDto;
+    /**
+     * Try to signUp user
+     *
+     * @param model user auth information
+     * smoked ✓
+     */
+    @PostMapping("/signUp")
+    @ResponseStatus(HttpStatus.OK)
+    @PermitAll
+    public void signUp(@RequestBody @Valid SignUpRequestModel model) {
+        userService.signUpUser(model);
+    }
+
+    /**
+     * Try to logUt user
+     * smoked ✓
+     */
+    @PostMapping("/logOut")
+    @PermitAll
+    public void logOut(HttpServletRequest request) {
+        request.getSession().invalidate();
+    }
+
+    /**
+     * Try to logUt user
+     * smoked ✓
+     */
+    @PostMapping("/confirm/{uuid}")
+    @PermitAll
+    public void activateUser(@PathVariable UUID uuid) {
+        userService.activateUser(uuid);
     }
 }
