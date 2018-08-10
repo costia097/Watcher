@@ -4,15 +4,32 @@
 #
 version: 2
 jobs:
+  test:
+    docker:
+      - image: openjdk:8u171-jdk-alpine
+            - image: mysql:5.6
+              command: mysqld --character-set-server=utf8mb4 --collation_server=utf8mb4_unicode_ci
+              environment:
+                MYSQL_ROOT_PASSWORD: empty
+                MYSQL_ROOT_HOST: "%"
+    steps:
+     - checkout
+      # Download and cache dependencies
+         - restore_cache:
+             keys:
+             - v1-dependencies-{{ checksum "build.gradle" }}
+             # fallback to using the latest cache if no exact match is found
+             - v1-dependencies-
+
+      - run: gradle dependencies
+     - run: gradle test --debug
+
+
+
   build:
     docker:
     # specify the version you desire here
     - image: circleci/openjdk:8-jdk
-    - image: mysql:5.6
-          command: mysqld --character-set-server=utf8mb4 --collation_server=utf8mb4_unicode_ci
-          environment:
-              MYSQL_ROOT_PASSWORD: empty
-              MYSQL_ROOT_HOST: "%"
 
     # Specify service dependencies here if necessary
     # CircleCI maintains a library of pre-built images
@@ -29,19 +46,7 @@ jobs:
     steps:
     - checkout
 
-    # Download and cache dependencies
-    - restore_cache:
-        keys:
-        - v1-dependencies-{{ checksum "build.gradle" }}
-        # fallback to using the latest cache if no exact match is found
-        - v1-dependencies-
-
-    - run: gradle dependencies
-
     - save_cache:
         paths:
         - ~/.gradle
         key: v1-dependencies-{{ checksum "build.gradle" }}
-
-    # run tests!
-    - run: gradle test --debug
