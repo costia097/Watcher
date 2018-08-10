@@ -9,6 +9,12 @@ jobs:
     # specify the version you desire here
     - image: circleci/openjdk:8-jdk
 
+     - image: mysql:5.6
+            command: mysqld --character-set-server=utf8mb4 --collation_server=utf8mb4_unicode_ci
+            environment:
+              MYSQL_ROOT_PASSWORD: empty
+              MYSQL_ROOT_HOST: "%"
+
     # Specify service dependencies here if necessary
     # CircleCI maintains a library of pre-built images
     # documented at https://circleci.com/docs/2.0/circleci-images/
