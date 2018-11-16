@@ -1,3 +1,4 @@
+# //TODO fix it
  CREATE TABLE user (
   id INT NOT NULL AUTO_INCREMENT,
   login VARCHAR(45) NOT NULL,
